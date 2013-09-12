@@ -2,7 +2,6 @@ REBOL [
 	Title: "Include"
 	File: %include.r
 	Author: "Ladislav Mecir"
-	WWW: http://www.rebol.net/wiki/INCLUDE_documentation
 	License: {
 		Licensed under the Apache License, Version 2.0 (the "License");
 		you may not use this file except in compliance with the License.
