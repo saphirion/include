@@ -2,6 +2,7 @@ REBOL [
 	Title: "Include"
 	File: %include.r
 	Author: "Ladislav Mecir"
+	WWW: http://www.rebol.net/wiki/INCLUDE_documentation
 	License: {
 		Licensed under the Apache License, Version 2.0 (the "License");
 		you may not use this file except in compliance with the License.
@@ -117,6 +118,8 @@ REBOL [
 			INVALID-DIRECTIVE	the UPDATE-DIRECTIVES function obtained
 								an invalid directive
 								in the DIRECTIVES-TO-UPDATE block
+			
+			SCRIPT-BUG		SCRIPT? bug - did not succeed to skip preface
 
 		Global variables used by directives:
 
@@ -167,6 +170,8 @@ unless value? 'include [
 			find-script source
 		]
 	]
+	
+	whitespace: charset [#"^A" - #" " #"^(7F)" #"^(A0)"]
 
 	; definitions of directives, guarded against INCLUDE
 	do if (#do [false]) [func [a b] [do first b]] #do [[
@@ -247,6 +252,7 @@ unless value? 'include [
 				]
 				unexpected-directive: ["Unexpected directive found in" :arg1]
 				invalid-directive: ["UPDATE-DIRECTIVES found an invalid directive"]
+				script-bug: ["SCRIPT? bug, use capital R in Rebol [] header"]
 			]
 	
 			either in system 'error [
@@ -373,7 +379,7 @@ unless value? 'include [
 				standard-header: system/standard/header
 			]
 	
-			split-path: function [
+			split-path: func [
 				{
 					Splits a file or URL.
 					Returns a block containing path and target.
@@ -390,7 +396,8 @@ unless value? 'include [
 	
 				}
 				file [file! url!]
-			] [target] [
+				/local target
+			] [
 				target: tail file
 				if (pick target -1) = #"/" [target: back target]
 				target: find/reverse target #"/"
@@ -398,11 +405,12 @@ unless value? 'include [
 				reduce [copy/part file target to file! target]
 			]
 	
-			findpfile: function [
+			findpfile: func [
 				{Find a file using the given search path}
 				path [block!]
 				file [file! url!]
-			] [dir found] [
+				/local dir found
+			] [
 				while [not empty? path] [
 					unless any [file? first :path url? first :path] [
 						do make-error 'include 'file-or-URL reduce [
@@ -586,7 +594,7 @@ unless value? 'include [
 					only {create a REBOL block}
 				/local
 					file-name file-path dir binary-base result old-header err
-					old-file
+					old-file temp
 			] [
 				; find the file
 				unless result: find-file source [
@@ -610,13 +618,24 @@ unless value? 'include [
 						result: file-name
 					]
 	
+					; read the file
+					if error? err: try [result: read result] [redo-error err]
+                        
+					; skip the preface
+					if err: script? result [
+						unless parse/all err [
+							copy temp 5 skip (temp: either "rebol" <> to string! temp [[:err]] [[any whitespace]])
+							temp
+							#"["
+							to end
+						] [
+							; a SCRIPT? bug
+							do make-error 'include 'script-bug []
+						]
+						result: err
+					]
+
 					if error? err: try [
-						; read the file
-						result: read result
-	
-						; skip the preface
-						result: any [script? result result]
-	
 						; load the script
 						result: either #"[" = pick result 1 [
 							; embedded script
