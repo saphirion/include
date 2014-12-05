@@ -146,7 +146,7 @@ The ~standard-header~ variable refers to the script header prototype object. Def
 
 The ~file~ variable refers to the file processed by *include*.
 
----INCLUDE-CTX functions
+---include-ctx functions
 
 +++include-script
 
@@ -192,7 +192,7 @@ Read a binary value from a source, compatible with R2 and R3.
 
 +++make-error
 
-Make the error according to the given specifications, compatible with R2 and R3, allows setting the NEAR and WHERE attributes even in R2.
+Make the error according to the given specifications, compatible with R2 and R3, allows setting the *near* and *where* attributes even in R2.
 
 +++disarm-error
 
@@ -347,8 +347,6 @@ In the definitions of the standard directives it is being used to hold the third
 
 This variable can be and frequently is redefined.
 
-
-
 ===The #print directive example
 
 The #print directive is meant as the debug-print directive. It uses (potentially) the *debug* flag to "decide" whether to turn the directive into a *print* call, or simply leave it out from the code together with its argument.
@@ -361,7 +359,6 @@ Usage:
 If the *debug* flag (global) is defined (set) when the #print directive is being processed the directive is turned into a *print* call; otherwise it is left out from the code.
 
 ---The definition of the #print directive
-
 
 	Rebol [
 	    Title: "Debug-print"
@@ -613,7 +610,7 @@ In the same way you can define the *open* association for *.r3* files.
 13-Oct-2011/01:58:00+2:00
 
 * RebGUI create-distribution problem solved
-* the COMMENT directive made standard
+* the *comment* directive made standard
 * the *include-ctx* context defined
 * *include* variables (see above) moved to the *include-ctx* context
 ** (watch out for the obsolete use of *include-path*, *include-log*, *include-push* and *include-pop*)
