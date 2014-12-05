@@ -232,7 +232,7 @@ A file or a URL was expected in *path*.
 
 +++stack-empty
 
-The *pop* function found the *stac* to be empty.
+The *pop* function found the *stack* to be empty.
 
 +++file-not-found
 
@@ -245,6 +245,10 @@ The directive expected an argument.
 +++invalid-directive
 
 The *update-directives* function obtained an invalid directive specification in the *directives-to-update* block.
+
++++script-bug
+
+The *script?* function has a bug in R2. The bug disallows R2 to skip script preface if the *Rebol []* header does not start with capital "R". This error signals that the problem occurred and the script was not loaded correctly.
 
 ===Usage examples
 
