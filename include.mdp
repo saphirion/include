@@ -514,6 +514,11 @@ In the same way you can define the *open* association for *.r3* files.
 
 ===Changelog
 
+5-Dec-2014/9:40:37+1:00
+
+* define the SCRIPT-BUG error
+* handle the SCRIPT? bug not skipping the script preface when the REBOL [] header does not start with capital "R"
+
 21-Jun-2013/15:06:50+2:00
 
 * *%include.r* made encappable
