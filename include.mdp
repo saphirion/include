@@ -541,9 +541,6 @@ In the same way you can define the ~open~ association for *.r3* files, or add mo
 
 14-Nov-2012/15:18:01+1:00
 
-* header processing reimplemented to really work
-* header handling changed
-** it is not a requirement to have a script header now in a manner compatible with R3 *do*
 * the ~file~ variable moved from the *include-block* context to *include-ctx*
 ** scripts can read the variable now,
 ** "knowing" what is being processed (before, only directives "knew" the variable)
@@ -551,6 +548,9 @@ In the same way you can define the ~open~ association for *.r3* files, or add mo
 ** for compatibility with R2 and R3
 * *script?* function patched
 * *include* function:
+** header processing reimplemented to really work
+** header handling changed
+*** it is not a requirement to have a script header now in a manner compatible with R3 *do*
 ** result corrected in a couple of special cases
 ** help strings improved
 * source punctuation improved
