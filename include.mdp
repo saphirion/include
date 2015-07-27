@@ -513,11 +513,11 @@ What happens at this point is that *HKEY_CURRENT_USER\Software\Microsoft\Windows
 
 +++How to add the new association for *.r* files in Windows XP or older
 
-Run the Windows Explorer and click on *Tools/Options* in menu. Next click on the *File Types* tab and find the *.r* file type associations. Click on the *Advanced* button and add a new action. Call the new action *r3* and the application associated with the new action may be e.g.:
+Run the Windows Explorer and click on *Tools/Options* in menu. Next click on the *File Types* tab and find the *.r* file type associations. Click on the *Advanced* button and add a new action. Call the new action *r3* and the application associated with the new action may be e.g. (do not forget to use your directory paths):
 
     "D:\Rebol\r3.exe" d:\rebol\incl.r3 "%1"
 
-(Adjust your directory appropriately). Next you can decide whether to make the *r3* action default. If you make it default you can just double-click (or left-click if you set your Explorer for one click as I did) on a *.r* file to include it. Otherwise you can right-click the file in Windows Explorer and pick the *r3* action from the quick menu.
+Next you can decide whether to make the *r3* action default. If you make it default you can just double-click (or left-click if you set your Explorer for one click as I did) on a *.r* file to include it. Otherwise you can right-click the file in Windows Explorer and pick the *r3* action from the quick menu.
 
 ===Availability
 
