@@ -485,19 +485,21 @@ This is an example file (do not forget to use your own directory paths):
 	; include the argument script
 	include to-rebol-file system/script/args
 
-+++How to add a new association for Windows Explorer in Windows Vista, Windows 7 or Windows 8
++++How to add a new association for Windows Explorer in Windows Vista, Windows 7, Windows 8, or Windows 10
 
 Actually, you can add more associations for your *.r* files. For example, you can have one called *open* to left-click evaluate your script in Windows Explorer using *include* and Rebol 2 interpreter and one called *r3* to right-click evaluate your script in Windows Explorer using *include* and the Rebol 3 interpreter.
 
 *Run the *regedit.exe* program
-*Find the *HKEY_CLASSES_ROOT\.r* key
-*Examine its *(Default)* value, should be something like *r_auto_file*
+*Find (or create) the *HKEY_CLASSES_ROOT\.r* key
+*Examine (or define) its *(Default)* value, should be something like *r_auto_file*
 *Find (or create) the *HKEY_CLASSES_ROOT\r_auto_file* key
 *Find (or create) the *HKEY_CLASSES_ROOT\r_auto_file\shell* subkey
 *Under the *shell* key find (or create) a new *open* subkey and a new *r3* subkey
 *Under the *open* key add a new *command* subkey (this will define the left-click Windows Explorer action)
 *Change the *(Default)* value of the *command* key to something like (do not forget to use your directory paths).
 	"D:\Rebol\rebol.exe" d:\rebol\incl.r "%1"
+or
+	"D:\Rebol\rebol.exe" -s d:\rebol\incl.r "%1"
 *Under the *r3* key add a new *command* subkey
 *Change the *(Default)* value of the *command* key to something like (do not forget to use your directory paths):
 	"D:\Rebol\r3.exe" d:\rebol\incl.r3 "%1"
@@ -507,7 +509,7 @@ Having added the association for the *.r* files left-clicking a *.r* file will r
 In the same way you can define the ~open~ association for *.r3* files, or add more associations, which can be selected from a menu appearing after right-clicking on a file.
 
 \note
-After using the Windows 7 built-in "Choose default program..." action (found under the file-right-click context menu under "Open with") it re-associates the extension with whatever new program you choose.
+After using the Windows 7 (or later) built-in "Choose default program..." action (found under the file-right-click context menu under "Open with") it re-associates the extension with whatever new program you choose.
 What happens at this point is that *HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.r\UserChoice*, and possibly *HKEY_CURRENT_USER\Software\Microsoft\Windows\Roaming\OpenWith\FileExts\.r\UserChoice* are created/changed by the system, and so the newly selected program takes over. To regain control over the extension you can delete the above UserChoice key/keys.
 /note
 
