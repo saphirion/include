@@ -509,7 +509,7 @@ Having added the association for the *.r* files left-clicking a *.r* file will r
 In the same way you can define the ~open~ association for *.r3* files, or add more associations, which can be selected from a menu appearing after right-clicking on a file.
 
 \note
-After using the Windows 7 (or later) built-in "Choose default program..." action (found under the file-right-click context menu under "Open with") it re-associates the extension with whatever new program you choose.
+After using the Windows 7, Windows 8 or Windows 10 built-in "Choose default program..." action (found under the file-right-click context menu under "Open with") it re-associates the extension with whatever new program you choose.
 What happens at this point is that *HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.r\UserChoice*, and possibly *HKEY_CURRENT_USER\Software\Microsoft\Windows\Roaming\OpenWith\FileExts\.r\UserChoice* are created/changed by the system, and so the newly selected program takes over. To regain control over the extension you can delete the above UserChoice key/keys.
 /note
 
