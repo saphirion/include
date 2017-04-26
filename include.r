@@ -578,10 +578,12 @@ unless value? 'include [
 				file [file! url!] {the file to process}
 				/check {include if the script hasn't been included yet}
 				/link {create a linked file}
-				output [file!]
+					output [file!]
 				/only {create a Rebol block}
+				/args {set arguments}
+					arg
 			] [
-				include-script/start copy [] file check output only
+				include-script/start copy [] file check output only arg
 			]
 	
 			include-script: func [
@@ -592,10 +594,17 @@ unless value? 'include [
 				/start {used by INCLUDE}
 					output {create a linked file}
 					only {create a REBOL block}
+					arg {arguments}
 				/local
 					file-name file-path dir binary-base result old-header err
-					old-file temp
+					old-file temp oldargs
 			] [
+				if start [
+					; set args, remember the old args
+					oldargs: system/script/args
+					system/script/args: arg
+				]
+				
 				; find the file
 				unless result: find-file source [
 					do make-error 'include 'file-not-found reduce [source file]
@@ -672,8 +681,11 @@ unless value? 'include [
 							] [
 								system/script/header: none
 							]
-	
+							
 							set/any 'result do result
+
+							; reset args
+							system/script/args: oldargs
 	
 							; restore the header
 							system/script/header: old-header

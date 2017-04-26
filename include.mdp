@@ -19,6 +19,7 @@ A comfortable script evaluator:
 * Processes ordinary scripts with Rebol header.
 * Processes prefaced Rebol scripts, i.e., Rebol scripts with preface preceding Rebol header and embedded Rebol scripts, see
 	http://www.rebol.com/docs/core23/rebolcore-5.html#section-1.2
+* *include/args* sets arguments for the script
 
 An improved script loader:
 * *include/only* loads and preprocesses a script, yielding a Rebol block.
@@ -264,6 +265,10 @@ To change the *include-ctx/path*:
 The *include* call corresponding to the ~#include-check~ directive is *include/check*, which preprocesses and runs the script only if it hasn't done so before:
 
     include/check %somefile.r
+
+The *include* call using script arguments:
+
+	include/args %somefile.r "my-argument-string"
 
 The distinction between preprocessing directives and "normal" *include* usage is best described on simple examples:
 
@@ -526,6 +531,9 @@ Next you can decide whether to make the *r3* action default. If you make it defa
 *Include* is available from *http://www.rebol.org/view-script.r?script=ladislav-include.r http://www.rebol.org/view-script.r?script=ladislav-include.r*.
 
 ===Changelog
+
+26-Apr-2017/12:47:36+2:00
+* add script arguments to *include*
 
 26-Jul-2015/11:20:13+2:00
 * enhance the doc to inform how to revert the "Choose default program..." action effect
