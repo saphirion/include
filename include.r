@@ -600,7 +600,7 @@ unless value? 'include [
 					old-file temp oldargs
 			] [
 				if start [
-					; set args, remember the old args
+					; set script args, remember the old args
 					oldargs: system/script/args
 					system/script/args: arg
 				]
@@ -684,7 +684,7 @@ unless value? 'include [
 							
 							set/any 'result do result
 
-							; reset args
+							; reset script args
 							system/script/args: oldargs
 	
 							; restore the header
