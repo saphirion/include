@@ -11,8 +11,8 @@ Include documentation
 
 A comfortable script evaluator:
 * Can preprocess and evaluate any Rebol script (the script does not have to contain *prebol* directives).
-* Processes *prebol* directives facilitating SDK debugging.
-* During preprocessing errors are enhanced to inform in which file the error occurred to make debugging more comfortable.
+* Processes *prebol* directives, facilitating SDK debugging.
+* Preprocessing errors are enhanced to inform in which file the error occurred to make debugging more comfortable.
 * Uses *include-ctx/path* which resembles paths of many operating systems to search for scripts.
 * *include-ctx/path* can contain URLs, not just local directories.
 * *include/check* prevents scripts from being re-included (included more than once).
@@ -23,11 +23,12 @@ A comfortable script evaluator:
 
 An improved script loader:
 * *include/only* loads and preprocesses a script, yielding a Rebol block.
-* *include/link* loads a script, preprocesses it, and saves the result to the specified file.
+* *include/link* loads a script, preprocesses it and saves the result to the specified file.
 
 An improved preprocessor:
-* Processes all *prebol* directives and is compatible with SDK.
+* Processes all *prebol* directives for basic compatibility with SDK.
 * The ~#include-check~ directive is available as a "don't re-include" variant of the ~#include~ directive.
+* Users can reliably guard parts of their code against preprocessing.
 * It is possible to include small parts of scripts like binary data, images or strings.
 * Context encapsulation is available using the *make object!* or the *make module!* method.
 * Users can define new directives.
@@ -66,7 +67,7 @@ Include the given *binary-file* as a binary.
 
 +++#include-files dir file-list
 
-Include the files from the *file-list* looking for them in the given *dir* directory. The files are included as a block containing name and the binary contents of all files.
+Include the files from the *file-list* looking for them in the given *dir* directory. The files are included as a block containing the name and the binary contents of all files.
 
 +++comment
 
@@ -182,7 +183,7 @@ Restores the previous *path* value from the *stack*. It is the counterpart of th
 
 +++do-next
 
-Do next expression, using the "R3 convention", compatible with R2 and R3.
+Do next expression using the "R3 convention", compatible with R2 and R3.
 
 +++load-next
 
@@ -254,7 +255,7 @@ The *script?* function has a bug in R2. The bug disallows R2 to skip script pref
 
 ===Usage examples
 
-A call equivalent to *prebol* processing *%somefile.r* and storing the result of the preprocessing to *%outfile.r* would look like:
+A call corresponding to *prebol* processing *%somefile.r* and storing the result of the preprocessing to *%outfile.r* would look like:
 
     include/link %somefile.r %outfile.r
 
@@ -293,9 +294,9 @@ To create the two versions of the script containing everything they need to run 
  
     include %script-builder.r
 
-, which takes care of creating both script versions.
+which takes care of creating both script versions.
 
-The *%script-base.r* file can look e.g. as follows:
+The *%script-base.r* file can look, e.g. as follows:
 
 	REBOL [
 	    File: %script-base.r
@@ -407,59 +408,37 @@ This directive evaluates an expression and includes its result 2 into the script
 
     #do [1 + 1]
 
-while this one evaluates the expression as well including nothing:
+while this one evaluates the expression as well, including nothing:
 
     #do [1 + 1 []]
 
 ---How to write code detecting whether it has been preprocessed
 
-When a script is running you may need to find out whether it has been preprocessed or not. Here is how:
+When a script is running, you may need to find out whether it has been preprocessed or not. Here is how:
 
-    print either (#do [false]) ["this code wasn't preprocessed"] ["this code was preprocessed"]
+    ; detect preprocessing
+	print either first [#do [false]] [
+		"this code was not preprocessed"
+	] [
+		"this code was preprocessed"
+	]
 
----How to write a part of a script that you don't want to be preprocessed
+---How to guard code containing preprocessor directives
 
-Sometimes you want a part of the script to remain untouched by the preprocessor. This is a way how:
+The *%include.r* script is an example of a script containing the preprocessor directives that we do not want to be preprocessed.
 
-	#do [[
-	    ; this part will not be preprocessed
-	    prin "part1: "
-	    print either (#do [false]) ["not preprocessed"] ["preprocessed"]
-	]]
+You may need to handle such situations yourself and write a script so that its behaviour is not influenced by the preprocessor.
+
+	do ([
+		; here we can put any code with preprocessor directives
+		; without worrying whether the user ran the script using DO or INCLUDE
+		; or how many times it was preprocessed
 		
-	; this part will be preprocessed
-	prin "part2: "
-	print either (#do [false]) ["not preprocessed"] ["preprocessed"]
-
----How to write a block you don't want to be preprocessed
-
-Using the above trick we can do it as follows:
-
-	#do [[[
-	    print mold #include
-	]]]
-
----How to write code compatible with both do and include
-
-The *%include.r* script may serve as an example of a script containing the preprocessor directives.
-
-You may want to write such a script so that its behaviour is the same whether it has been run by *do* or *include*.
-
-Combining the tricks from the previous sections: 
-
-	do if (#do [false]) [func [a b] [do first b]] #do [[
-	    ; here we can put any code with preprocessor directives
-	    ; without worrying whether the user ran the script using DO or INCLUDE:
-	    print mold #include
-	    ; etc.
-	]]
-
-Another alternative - this time it is a block that remains unprocessed no matter whether the script is processed by *do* or *include*:
-
-	do either (#do [false])[func [a b] [b/1/1]] [func [a] [:a]] #do [[[
-	    ; here I can put any code with or without preprocessor directives
-	    print mold #include
-	]]]
+		; this would catch unguarded preprocessing
+		#do [do make error! "Unguarded preprocessing."]
+		
+		none
+	])
 
 ---How to run your scripts from Windows Explorer using include
 
@@ -515,7 +494,7 @@ In the same way you can define the ~open~ association for *.r3* files, or add mo
 
 \note
 After using the Windows 7, Windows 8 or Windows 10 built-in "Choose default program..." action (found under the file-right-click context menu under "Open with") it re-associates the extension with whatever new program you choose.
-What happens at this point is that *HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.r\UserChoice*, and possibly *HKEY_CURRENT_USER\Software\Microsoft\Windows\Roaming\OpenWith\FileExts\.r\UserChoice* are created/changed by the system, and so the newly selected program takes over. To regain control over the extension you can delete the above UserChoice key/keys.
+What happens at this point is that *HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.r\UserChoice* and possibly *HKEY_CURRENT_USER\Software\Microsoft\Windows\Roaming\OpenWith\FileExts\.r\UserChoice* are created/changed by the system and so the newly selected program takes over. To regain control over the extension you can delete the above UserChoice key/keys.
 /note
 
 +++How to add the new association for *.r* files in Windows XP or older
@@ -532,8 +511,16 @@ Next you can decide whether to make the *r3* action default. If you make it defa
 
 ===Changelog
 
+11-Nov-2020/11:44:26+1:00
+* do not allow the preprocessor to process paren contents. Sorry for any discomfort this update may cause to the users, but it has got these advantages:
+** makes the behaviour of *include* compatible with *prebol* in this respect
+** in contrast to the older versions, this gives the user a reliable tool allowing him to protect code containing preprocessor directives against preprocessing; see the how to
+* circumvent a (most likely routine call-related) interpreter bug
+* update the documentation
+
 26-Apr-2017/12:47:36+2:00
 * add script arguments to *include*
+* update the documentation
 
 26-Jul-2015/11:20:13+2:00
 * enhance the doc to inform how to revert the "Choose default program..." action effect
@@ -642,7 +629,7 @@ Next you can decide whether to make the *r3* action default. If you make it defa
 * *include* variables (see above) moved to the *include-ctx* context
 ** (watch out for the obsolete use of ~include-path~, ~include-log~, ~include-push~ and ~include-pop~)
 * all helper functions moved to the *include-ctx* context (see above)
-** , which makes it easier for the user to use any of the helper functions in his own directives
+** which makes it easier for the user to use any of the helper functions in his own directives
 * *include-parser* function does not exist anymore
 * *set-directives* function now generates the *include-block* function
 * ~localize-block~ removed from the standard code
