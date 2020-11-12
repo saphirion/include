@@ -28,6 +28,8 @@ An improved script loader:
 An improved preprocessor:
 * Processes all *prebol* directives for basic compatibility with SDK.
 * The ~#include-check~ directive is available as a "don't re-include" variant of the ~#include~ directive.
+* The ~#paren~ directive is available if the user wants to preprocess a paren.
+* The ~comment~ directive is available if the user wants the preprocessor to strip the comments from the script.
 * Users can reliably guard parts of their code against preprocessing.
 * It is possible to include small parts of scripts like binary data, images or strings.
 * Context encapsulation is available using the *make object!* or the *make module!* method.
@@ -56,6 +58,10 @@ The same as above, except that the script is not included if present in the *inc
 +++#do block
 
 Do the given code block during preprocessing including the result here without preprocessing it further.
+
++++#paren paren
+
+Preprocess the given paren.
 
 +++#include-string text-file
 
@@ -510,6 +516,10 @@ Next you can decide whether to make the *r3* action default. If you make it defa
 *Include* is available from *http://www.rebol.org/view-script.r?script=ladislav-include.r http://www.rebol.org/view-script.r?script=ladislav-include.r*.
 
 ===Changelog
+
+12-Nov-2020/10:54:32+1:00
+* add a ~#paren~ directive to allow paren preprocessing when needed
+* update the documentation
 
 11-Nov-2020/11:44:26+1:00
 * do not allow the preprocessor to process paren contents. Sorry for any discomfort this update may cause to the users, but it has got these advantages:
