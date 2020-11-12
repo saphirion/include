@@ -631,9 +631,7 @@ unless value? 'include [
 				if error? err: try [result: read result] [redo-error err]
 					
 				; skip the preface
-				; this is a separate line to circumvent an interpreter bug
-				err: script? result
-				if err [
+				if err: script? result [
 					unless parse/all err [
 						copy temp 5 skip (
 							temp: either "rebol" <> to string! temp [
@@ -711,7 +709,7 @@ unless value? 'include [
 		]
 		
 		set-directives block-directive: [
-			[set value1 [block!]]
+			[set value1 block!]
 			(append/only linked include-block make value1 0 value1)
 		]
 		
