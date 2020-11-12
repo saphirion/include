@@ -654,8 +654,6 @@ Next you can decide whether to make the *r3* action default. If you make it defa
 
 ===See also
 
-The article 
-	
-	http://www.rebol.org/art-display-article.r?article=w24v
-
+The article
+=url http://www.rebol.org/art-display-article.r?article=w24v
 describes how *include* was ported to Rebol 3.
