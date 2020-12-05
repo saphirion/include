@@ -284,13 +284,13 @@ The first example uses *include*, but not the preprocessing directives:
 	REBOL [
 	    File: %script-builder.r
 	]
-
 	; create a new "standard" script from the script base
 	verbose: false
+	;
 	; use a clean LOG
 	clear include-ctx/log
 	include/link %script-base.r %standard-script.r
-
+	;
 	; now create a verbose version
 	verbose: true
 	clear include-ctx/log
@@ -307,7 +307,6 @@ The *%script-base.r* file can look, e.g. as follows:
 	REBOL [
 	    File: %script-base.r
 	]
-
 	#either [verbose] [debug: :print] [debug: none]
 	#include-check %part1.r
 	#include-check %part2.r
@@ -320,7 +319,6 @@ It is possible to encapsulate contexts as follows:
 	REBOL [
 	    Title: "my script"
 	]
-
 	make object! [#include %your-script.r]
 	make module! [[module spec goes here] [#include %his-script.r]]
 
@@ -372,7 +370,7 @@ Usage:
 
 If the ~debug~ flag (global) is defined (set) when the ~#print~ directive is being processed, the directive is turned into a *print* call; otherwise it is left out from the code.
 
----The definition of the #print directive
+---A definition of a #print directive
 
 	Rebol [
 	    Title: "Debug-print"
@@ -386,7 +384,6 @@ If the ~debug~ flag (global) is defined (set) when the ~#print~ directive is bei
 	            otherwise, #print and its argument are left out
 	    }
 	]
-
 	include-ctx/update-directives [
 	    #print set value1 skip (
 	        if value? 'debug [
@@ -445,10 +442,10 @@ You may need to handle such situations yourself and write a script so that its b
 		; here we can put any code with preprocessor directives
 		; without worrying whether the user ran the script using DO or INCLUDE
 		; or how many times it was preprocessed
-
+		;
 		; this would catch unguarded preprocessing
 		#do [do make error! "Unguarded preprocessing."]
-
+		;
 		none
 	])
 
@@ -471,13 +468,10 @@ This is an example file (do not forget to use your own directory paths):
 		Date: 30-Sep-2011/10:23:03+2:00
 		Purpose: {Includes the first argument file, works with R3}
 	]
-
 	; define the INCLUDE function
 	do %include.r
-
 	;---- R3 GUI
 	include %/d/ladislav/saphirion/trunk/r3-gui/loader/loader.r3
-
 	; include the argument script
 	include to-rebol-file system/script/args
 
