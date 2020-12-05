@@ -208,21 +208,21 @@ Make the error according to the given specifications, compatible with R2 and R3,
 Disarm the error, compatible with R2 and R3.
 
 +++redo-error
-							
+
 "enhance" (if needed) and redo the given error.
 
 +++include-error
-							
+
 Create and trigger a new include-type error.
-			
+
 +++split-path
 
 Splits the given path.
 
 +++findpfile
-			
+
 Find the given file using the given search path.
-			
+
 +++find-file
 
 Find a file (using *include-ctx/path* if desired).
@@ -230,7 +230,7 @@ Find a file (using *include-ctx/path* if desired).
 ---The include error type
 
 A new *include* error type is defined, with the following ids:
-		
+
 +++enhanced
 
 This error represents an, otherwise "normal" error that occurred during code preprocessing. The error is "enhanced" to "know" the file in which it occurred.
@@ -284,20 +284,20 @@ The first example uses *include*, but not the preprocessing directives:
 	REBOL [
 	    File: %script-builder.r
 	]
-	
+
 	; create a new "standard" script from the script base
 	verbose: false
 	; use a clean LOG
 	clear include-ctx/log
 	include/link %script-base.r %standard-script.r
-	
+
 	; now create a verbose version
 	verbose: true
 	clear include-ctx/log
 	include/link %script-base.r %verbose-script.r
 
 To create the two versions of the script containing everything they need to run it is sufficient to do:
- 
+
     include %script-builder.r
 
 which takes care of creating both script versions.
@@ -307,7 +307,7 @@ The *%script-base.r* file can look, e.g. as follows:
 	REBOL [
 	    File: %script-base.r
 	]
-	
+
 	#either [verbose] [debug: :print] [debug: none]
 	#include-check %part1.r
 	#include-check %part2.r
@@ -320,7 +320,7 @@ It is possible to encapsulate contexts as follows:
 	REBOL [
 	    Title: "my script"
 	]
-		
+
 	make object! [#include %your-script.r]
 	make module! [[module spec goes here] [#include %his-script.r]]
 
@@ -386,7 +386,7 @@ If the ~debug~ flag (global) is defined (set) when the ~#print~ directive is bei
 	            otherwise, #print and its argument are left out
 	    }
 	]
-	
+
 	include-ctx/update-directives [
 	    #print set value1 skip (
 	        if value? 'debug [
@@ -423,10 +423,16 @@ while this one evaluates the expression as well, including nothing:
 When a script is running, you may need to find out whether it has been preprocessed or not. Here is how:
 
     ; detect preprocessing
-	print either first [#do [false]] [
-		"this code was not preprocessed"
-	] [
-		"this code was preprocessed"
+	print case [
+		paren? first [#paren ()] [
+			"this code was preprocessed by Include"
+		]
+		integer? first [#do [1]] [
+			"this code was preprocessed by prebol"
+		]
+		'else [
+			"this code was not preprocessed"
+		]
 	]
 
 ---How to guard code containing preprocessor directives
@@ -439,10 +445,10 @@ You may need to handle such situations yourself and write a script so that its b
 		; here we can put any code with preprocessor directives
 		; without worrying whether the user ran the script using DO or INCLUDE
 		; or how many times it was preprocessed
-		
+
 		; this would catch unguarded preprocessing
 		#do [do make error! "Unguarded preprocessing."]
-		
+
 		none
 	])
 
@@ -465,13 +471,13 @@ This is an example file (do not forget to use your own directory paths):
 		Date: 30-Sep-2011/10:23:03+2:00
 		Purpose: {Includes the first argument file, works with R3}
 	]
-	
+
 	; define the INCLUDE function
 	do %include.r
-	
+
 	;---- R3 GUI
 	include %/d/ladislav/saphirion/trunk/r3-gui/loader/loader.r3
-	
+
 	; include the argument script
 	include to-rebol-file system/script/args
 
@@ -516,6 +522,9 @@ Next you can decide whether to make the *r3* action default. If you make it defa
 *Include* is available from *http://www.rebol.org/view-script.r?script=ladislav-include.r http://www.rebol.org/view-script.r?script=ladislav-include.r*.
 
 ===Changelog
+
+5-Dec-2020/12:32:03+1:00
+* update the documentation
 
 12-Nov-2020/10:54:32+1:00
 * add a ~#paren~ directive to allow paren preprocessing when needed
